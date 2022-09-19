@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { ThemeProvider } from 'styled-components';
 import theme from './src/global/styles/theme';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   useFonts,
   Roboto_400Regular,
@@ -31,9 +32,11 @@ const App: React.FunctionComponent = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <SignUp />
-    </ThemeProvider>
+    <NavigationContainer>
+      <ThemeProvider theme={theme}>
+        <SignUp />
+      </ThemeProvider>
+    </NavigationContainer>
   );
 };
 
