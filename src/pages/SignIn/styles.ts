@@ -20,3 +20,9 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.colors.light};
   margin-bottom: 24px;
 `;
+
+export const Logo = styled.Image`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: none;
+`;
