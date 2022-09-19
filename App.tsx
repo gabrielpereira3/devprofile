@@ -7,14 +7,12 @@ import {
   Roboto_400Regular,
   Roboto_700Bold,
 } from '@expo-google-fonts/roboto';
-import { Anton_400Regular } from '@expo-google-fonts/anton';
 import * as SplashScreen from 'expo-splash-screen';
 
 const App: React.FunctionComponent = () => {
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_700Bold,
-    Anton_400Regular,
   });
 
   const onLayoutRootView = useCallback(async () => {

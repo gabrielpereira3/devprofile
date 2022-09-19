@@ -13,7 +13,7 @@ export default {
     gray800: '#29292e',
   },
   fonts: {
-    regular: 'Anton_400Regular',
+    regular: 'Roboto_400Regular',
     bold: 'Roboto_700Bold',
   },
 };
