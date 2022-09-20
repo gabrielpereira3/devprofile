@@ -28,6 +28,7 @@ export const LogoContainer = styled.View`
   margin-bottom: ${RFValue(24)}px;
   background-color: white;
   padding: ${RFValue(10)}px;
+  border-radius: ${RFValue(25)}px;
 `;
 
 export const Logo = styled.Image`
