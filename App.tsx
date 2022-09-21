@@ -9,6 +9,7 @@ import {
 } from '@expo-google-fonts/roboto';
 import * as SplashScreen from 'expo-splash-screen';
 import { Routes } from './src/routes';
+import { AuthProvider } from './src/context/AuthContext';
 
 const App: React.FunctionComponent = () => {
   const [fontsLoaded] = useFonts({
@@ -34,7 +35,9 @@ const App: React.FunctionComponent = () => {
   return (
     <NavigationContainer>
       <ThemeProvider theme={theme}>
-        <Routes />
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </ThemeProvider>
     </NavigationContainer>
   );
