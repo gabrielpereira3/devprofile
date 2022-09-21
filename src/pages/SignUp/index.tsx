@@ -15,8 +15,12 @@ import {
 import logo from '../../assets/logo.png';
 import { useNavigation } from '@react-navigation/native';
 
+interface ScreenNavigationProp {
+  goBack: () => void;
+}
+
 export const SignUp: React.FunctionComponent = () => {
-  const { goBack } = useNavigation();
+  const { goBack } = useNavigation<ScreenNavigationProp>();
 
   return (
     <KeyboardAvoidingView

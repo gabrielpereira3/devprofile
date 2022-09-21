@@ -6,10 +6,10 @@ interface ButtonProps extends TouchableOpacityProps {
   title: string;
 }
 
-export const Button: React.FunctionComponent<ButtonProps> = (
-  { title },
+export const Button: React.FunctionComponent<ButtonProps> = ({
+  title,
   ...otherProps
-) => {
+}) => {
   return (
     <Container {...otherProps}>
       <Title>{title}</Title>
