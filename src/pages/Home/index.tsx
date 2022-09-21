@@ -12,19 +12,26 @@ import {
   UserWrapper,
 } from './styles';
 import avatarDefault from '../../assets/avatar01.png';
+import { useAuth } from '../../context/AuthContext';
 
 export const Home: React.FunctionComponent = () => {
+  const { user } = useAuth();
+
   return (
     <Container>
       <Header>
         <UserWrapper>
           <UserInfo>
             <UserAvatarButton onPress={() => {}}>
-              <UserAvatar source={avatarDefault} />
+              <UserAvatar
+                source={
+                  user.avatar_url ? { uri: user.avatar_url } : avatarDefault
+                }
+              />
             </UserAvatarButton>
             <UserInfoDetail>
               <UserGreeting>Olá, </UserGreeting>
-              <UserName>Jorge</UserName>
+              <UserName>{user.name}</UserName>
             </UserInfoDetail>
           </UserInfo>
           <Icon name="log-out" />
