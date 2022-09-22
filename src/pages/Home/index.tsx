@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import {
   Container,
@@ -22,9 +23,14 @@ import { IUser } from '../../model/user';
 import { api } from '../../services/api';
 import { User } from '../../components/User';
 
+interface ScreenNavigationProp {
+  navigate: (screen: string, params?: unknown) => void;
+}
+
 export const Home: React.FunctionComponent = () => {
   const [users, setUsers] = React.useState<IUser[]>([]);
   const { user, signOut } = useAuth();
+  const { navigate } = useNavigation<ScreenNavigationProp>();
 
   React.useEffect(() => {
     const loadUsers = async () => {
@@ -45,6 +51,10 @@ export const Home: React.FunctionComponent = () => {
         onPress: () => signOut(),
       },
     ]);
+  };
+
+  const handleUserDetails = (userId: string) => {
+    navigate('UserDetails', { userId });
   };
 
   return (
@@ -72,7 +82,9 @@ export const Home: React.FunctionComponent = () => {
       <UserList
         data={users}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => <User data={item} onPress={() => {}} />}
+        renderItem={({ item }) => (
+          <User data={item} onPress={() => handleUserDetails(item.id)} />
+        )}
         ListHeaderComponent={<UserListHeader>Usuários</UserListHeader>}
         ListEmptyComponent={
           <UserListEmpty>Ops! Ainda não há registros.</UserListEmpty>
