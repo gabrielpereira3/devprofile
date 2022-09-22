@@ -27,6 +27,7 @@ import { InputControl } from '../../components/Form/InputControl';
 
 interface ScreenNavigationProp {
   goBack: () => void;
+  navigate(screen: string): void;
 }
 
 interface IFormInputs {
@@ -48,7 +49,7 @@ export const SignUp: React.FunctionComponent = () => {
     resolver: yupResolver(formSchema),
   });
 
-  const { goBack } = useNavigation<ScreenNavigationProp>();
+  const { goBack, navigate } = useNavigation<ScreenNavigationProp>();
 
   const handleSignUp = async (form: IFormInputs) => {
     const data = {
@@ -63,6 +64,7 @@ export const SignUp: React.FunctionComponent = () => {
         'Cadastro realizado com sucesso',
         'Você já pode realizar o login na aplicação.',
       );
+      navigate('SignIn');
     } catch (error) {
       Alert.alert(
         'Erro no cadastro',
