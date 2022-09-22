@@ -26,7 +26,7 @@ export const GoBackButton = styled.TouchableOpacity`
 
 export const Icon = styled(Feather)`
   color: ${({ theme }) => theme.colors.gray800};
-  font-size: ${RFValue(20)}px;
+  font-size: ${RFValue(24)}px;
 `;
 
 export const HeaderTitle = styled.Text`
