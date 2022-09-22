@@ -1,23 +1,22 @@
 import React from 'react';
 import {
-  ScrollView,
+  Alert,
   KeyboardAvoidingView,
   Platform,
-  View,
-  Alert,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, FieldValues } from 'react-hook-form';
 import { Button } from '../../components/Form/Button';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { api } from '../../services/api';
+
 import {
+  BackToSignIn,
+  BackToSignInTitle,
   Container,
   Content,
-  CreateAccount,
-  CreateAccountTitle,
-  ForgotPasswordButton,
-  ForgotPasswordTitle,
   Icon,
   Logo,
   LogoContainer,
@@ -25,10 +24,10 @@ import {
 } from './styles';
 import logo from '../../assets/logo.png';
 import { InputControl } from '../../components/Form/InputControl';
-import { useAuth } from '../../context/AuthContext';
 
 interface ScreenNavigationProp {
-  navigate: (screen: string) => void;
+  goBack: () => void;
+  navigate(screen: string): void;
 }
 
 interface IFormInputs {
@@ -37,13 +36,9 @@ interface IFormInputs {
 
 const formSchema = yup.object({
   email: yup.string().email('Email inválido.').required('Informe o email.'),
-  password: yup.string().required('Informe a senha.'),
 });
 
-export const SignIn: React.FunctionComponent = () => {
-  const { signIn } = useAuth();
-  const [loading, setLoading] = React.useState(false);
-
+export const ForgotPassword: React.FunctionComponent = () => {
   const {
     handleSubmit,
     control,
@@ -52,21 +47,24 @@ export const SignIn: React.FunctionComponent = () => {
     resolver: yupResolver(formSchema),
   });
 
-  const { navigate } = useNavigation<ScreenNavigationProp>();
+  const { goBack, navigate } = useNavigation<ScreenNavigationProp>();
 
-  const handleSignIn = (form: IFormInputs) => {
+  const handleForgotPassword = async (form: IFormInputs) => {
     const data = {
       email: form.email,
-      password: form.password,
     };
 
-    setLoading(true);
     try {
-      signIn(data);
+      await api.post('password/forgot', data);
+      Alert.alert(
+        'Email enviado com sucesso',
+        'Você receberá um email com as instruções para a redefinição da senha.',
+      );
+      navigate('SignIn');
     } catch (error) {
       Alert.alert(
-        'Erro na autenticação',
-        'Ocorreu um erro ao fazer login, verifique as credenciais',
+        'Erro no envio do email',
+        'Ocorreu um erro ao enviar o email. Tente novamente.',
       );
     }
   };
@@ -86,9 +84,7 @@ export const SignIn: React.FunctionComponent = () => {
             <LogoContainer>
               <Logo source={logo} style={{ resizeMode: 'contain' }} />
             </LogoContainer>
-            <View>
-              <Title>Faça seu login</Title>
-            </View>
+            <Title>Esqueci minha senha</Title>
             <InputControl
               autoCapitalize="none"
               autoCorrect={false}
@@ -98,38 +94,21 @@ export const SignIn: React.FunctionComponent = () => {
               keyboardType="email-address"
               error={errors.email && errors.email.message}
             />
-            <InputControl
-              autoCapitalize="none"
-              autoCorrect={false}
-              control={control}
-              name={'password'}
-              placeholder="Senha"
-              secureTextEntry
-              error={errors.password && errors.password.message}
-            />
             <Button
-              title="Entrar"
-              disabled={loading || errors.email || errors.password}
-              onPress={handleSubmit(handleSignIn)}
+              title="Enviar email"
+              onPress={handleSubmit(handleForgotPassword)}
             />
-            <ForgotPasswordButton
-              onPress={() => {
-                navigate('ForgotPassword');
-              }}
-            >
-              <ForgotPasswordTitle>Esqueci minha senha</ForgotPasswordTitle>
-            </ForgotPasswordButton>
           </Content>
         </Container>
       </ScrollView>
-      <CreateAccount
+      <BackToSignIn
         onPress={() => {
-          navigate('SignUp');
+          goBack();
         }}
       >
-        <Icon name="log-in" />
-        <CreateAccountTitle>Criar uma conta</CreateAccountTitle>
-      </CreateAccount>
+        <Icon name="arrow-left" />
+        <BackToSignInTitle>Voltar para login</BackToSignInTitle>
+      </BackToSignIn>
     </KeyboardAvoidingView>
   );
 };
