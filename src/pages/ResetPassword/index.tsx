@@ -5,7 +5,10 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {
+  NavigationHelpersContext,
+  useNavigation,
+} from '@react-navigation/native';
 import { useForm, FieldValues } from 'react-hook-form';
 import { Button } from '../../components/Form/Button';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -35,10 +38,14 @@ interface IFormInputs {
 }
 
 const formSchema = yup.object({
-  email: yup.string().email('Email inválido.').required('Informe o email.'),
+  token: yup.string().uuid('Código inválido.').required('Informe o código.'),
+  password: yup.string().required('Informe a nova senha.'),
+  password_confirmation: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Confirmação incorreta'),
 });
 
-export const ForgotPassword: React.FunctionComponent = () => {
+export const ResetPassword: React.FunctionComponent = () => {
   const {
     handleSubmit,
     control,
@@ -49,22 +56,24 @@ export const ForgotPassword: React.FunctionComponent = () => {
 
   const { goBack, navigate } = useNavigation<ScreenNavigationProp>();
 
-  const handleForgotPassword = async (form: IFormInputs) => {
+  const handleResetPassword = async (form: IFormInputs) => {
     const data = {
-      email: form.email,
+      token: form.token,
+      password: form.password,
+      password_confirmation: form.password_confirmation,
     };
 
     try {
-      await api.post('password/forgot', data);
+      await api.post('password/reset', data);
       Alert.alert(
-        'Email enviado com sucesso',
-        'Você receberá um email com as instruções para a redefinição da senha.',
+        'Redefinição de senha',
+        'A senha foi redefinida com sucesso!',
       );
-      navigate('ResetPassword');
+      navigate('SignIn');
     } catch (error) {
       Alert.alert(
-        'Erro no envio do email',
-        'Ocorreu um erro ao enviar o email. Tente novamente.',
+        'Erro na redefinição de senha',
+        'Ocorreu um erro na redefinição de senha. Tente novamente.',
       );
     }
   };
@@ -84,19 +93,38 @@ export const ForgotPassword: React.FunctionComponent = () => {
             <LogoContainer>
               <Logo source={logo} style={{ resizeMode: 'contain' }} />
             </LogoContainer>
-            <Title>Esqueci minha senha</Title>
+            <Title>Redefinição de senha</Title>
+            <InputControl
+              autoCorrect={false}
+              control={control}
+              name={'token'}
+              placeholder="Código"
+              error={errors.token && errors.token.message}
+            />
             <InputControl
               autoCapitalize="none"
               autoCorrect={false}
               control={control}
-              name={'email'}
-              placeholder="Email"
-              keyboardType="email-address"
-              error={errors.email && errors.email.message}
+              name={'password'}
+              placeholder="Senha"
+              secureTextEntry
+              error={errors.password && errors.password.message}
+            />
+            <InputControl
+              autoCapitalize="none"
+              autoCorrect={false}
+              control={control}
+              name={'password_confirmation'}
+              placeholder="Confirme a senha"
+              secureTextEntry
+              error={
+                errors.password_confirmation &&
+                errors.password_confirmation.message
+              }
             />
             <Button
-              title="Enviar email"
-              onPress={handleSubmit(handleForgotPassword)}
+              title="Redefinir senha"
+              onPress={handleSubmit(handleResetPassword)}
             />
           </Content>
         </Container>
