@@ -10,6 +10,7 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { Routes } from './src/routes';
 import { AuthProvider } from './src/context/AuthContext';
+import { StatusBar } from 'expo-status-bar';
 
 const App: React.FunctionComponent = () => {
   const [fontsLoaded] = useFonts({
@@ -34,6 +35,7 @@ const App: React.FunctionComponent = () => {
 
   return (
     <NavigationContainer>
+      <StatusBar backgroundColor="transparent" translucent />
       <ThemeProvider theme={theme}>
         <AuthProvider>
           <Routes />
