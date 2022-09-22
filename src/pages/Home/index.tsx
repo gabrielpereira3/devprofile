@@ -15,9 +15,22 @@ import {
 } from './styles';
 import avatarDefault from '../../assets/avatar01.png';
 import { useAuth } from '../../context/AuthContext';
+import { IUser } from '../../model/user';
+import { api } from '../../services/api';
 
 export const Home: React.FunctionComponent = () => {
+  const [users, setUsers] = React.useState<IUser[]>([]);
   const { user, signOut } = useAuth();
+
+  React.useEffect(() => {
+    const loadUsers = async () => {
+      const response = await api.get('users');
+      setUsers(response.data);
+    };
+    loadUsers();
+  }, []);
+
+  console.log(users);
 
   const handleSignOut = () => {
     Alert.alert('Sair da aplicação', 'Deseja realmente sair da aplicação?', [
